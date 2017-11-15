@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/mfarmer91/graphql-project#readme",
   "dependencies": {
+    "express": "^4.16.2",
+    "express-graphql": "^0.6.11",
     "graphql": "^0.11.7",
     "mongodb": "^2.2.33"
   }
