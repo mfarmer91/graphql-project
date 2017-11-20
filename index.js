@@ -26,7 +26,9 @@ MongoClient.connect(MONGO_URL, (err, db) => {
   //defines route at /graphql and delegates handling of route to express-graphql middleware.  Now we can read the input query from the URL.
   app.use('/graphql', graphqlHTTP({
       schema: mySchema,
-      context: { db }
+      context: { db },
+      graphiql: true
+      //runs an instance of GraphIQL editor -- good for testing queries before using them forreal.
   }));
     
     //this starts the app.
