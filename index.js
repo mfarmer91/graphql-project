@@ -5,6 +5,9 @@ const graphqlHTTP = require('express-graphql');
 const express = require('express');
 //express is the server
 const app = express();
+app.use(express.static('public'));
+//the above line adds 'static middleware', or software between the server and the client-facing index.html.  The public directory is where the index.html file is stored.
+
 const MONGO_URL = 'mongodb://localhost:27017/test';
 
 MongoClient.connect(MONGO_URL, (err, db) => {
