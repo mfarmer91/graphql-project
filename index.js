@@ -1,22 +1,10 @@
-const { graphql } = require('graphql');
-const readline = require('readline');
-
-const mySchema = require('./schema/main');
-
-const graphqlHTTP = require('express-graphql');
-
-const express = require('express');
-
-const app = express();
-
-const rli = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout
-});
-
 const { MongoClient } = require('mongodb');
 const assert = require('assert');
-
+const mySchema = require('./schema/main');
+const graphqlHTTP = require('express-graphql');
+const express = require('express');
+//express is the server
+const app = express();
 const MONGO_URL = 'mongodb://localhost:27017/test';
 
 MongoClient.connect(MONGO_URL, (err, db) => {
