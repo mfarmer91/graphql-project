@@ -13,8 +13,31 @@
           "description": null,
           "fields": [
             {
+              "name": "quotesLibrary",
+              "description": "The Quotes Library",
+              "args": [],
+              "type": {
+                "kind": "OBJECT",
+                "name": "QuotesLibrary",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            }
+          ],
+          "inputFields": null,
+          "interfaces": [],
+          "enumValues": null,
+          "possibleTypes": null
+        },
+        {
+          "kind": "OBJECT",
+          "name": "QuotesLibrary",
+          "description": null,
+          "fields": [
+            {
               "name": "allQuotes",
-              "description": "A list of quotes in the database.",
+              "description": "A list of the quotes in the database",
               "args": [],
               "type": {
                 "kind": "LIST",
