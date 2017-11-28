@@ -1,7 +1,11 @@
 {
+    "passPerPreset": true,
+    //executes presets
     "presets": [
+        {"plugins": ["./babelRelayPlugin"]},
         "react",
         "es2015",
         "stage-0"
     ]
 }
+//When this is run, Relay.QL queries will be converted to objects.

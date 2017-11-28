@@ -24625,6 +24625,34 @@ _reactDom2.default.render(_react2.default.createElement(_reactRelay2.default.Roo
   route: new AppRoute()
 }), document.getElementById('react'));
 
+console.log(function () {
+  return {
+    children: [{
+      fieldName: 'id',
+      kind: 'Field',
+      metadata: {},
+      type: 'String'
+    }, {
+      fieldName: 'text',
+      kind: 'Field',
+      metadata: {},
+      type: 'String'
+    }, {
+      fieldName: 'author',
+      kind: 'Field',
+      metadata: {},
+      type: 'String'
+    }],
+    fieldName: 'allQuotes',
+    kind: 'Query',
+    metadata: {
+      isPlural: true
+    },
+    name: 'AllQuotes',
+    type: 'Quote'
+  };
+}());
+
 /***/ }),
 /* 253 */
 /***/ (function(module, exports, __webpack_require__) {
