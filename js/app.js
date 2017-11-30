@@ -5,25 +5,10 @@ import Relay from 'react-relay';
 import Quote from './quote';
 
 class QuotesLibrary extends React.Component {
-  state = { allQuotes: [] };
-
-  componentDidMount() {
-    fetch(`/graphql?query={
-                            allQuotes {
-                              id,
-                              text,
-                              author
-                            }
-                          }`)
-      .then(response => response.json())
-      .then(json => this.setState(json.data))
-      .catch(ex => console.error(ex))
-  }
-
   render() {
     return (
       <div className="quotes-list">
-        {this.state.allQuotes.map(quote =>
+        {this.props.library.allQuotes.map(quote =>
           <Quote key={quote.id} quote={quote} />
         )}
       </div>
@@ -32,12 +17,32 @@ class QuotesLibrary extends React.Component {
 }
 
 QuotesLibrary = Relay.createContainer(QuotesLibrary, {
-  fragments: {}
+  fragments: {
+    library: () => Relay.QL `
+      fragment AllQuotes on QuotesLibrary {
+        allQuotes {
+          id
+          ${Quote.getFragment('quote')}
+        }
+      }
+    `
+  }
 });
+//Relay does the AJAX fetching and stores the state, though a complete query must be created below in order to communicate with the server.
 
 class AppRoute extends Relay.Route {
   static routeName = 'App';
+  static queries = {
+    library: (Component) => Relay.QL `
+      query QuotesLibrary {
+        quotesLibrary {
+          ${Component.getFragment('library')}
+        }
+      }
+    `
+  }
 }
+//(Component) is what is passed to the RootQuery below, and in this case it is the QuotesLibrary component.
 
 ReactDOM.render(
   <Relay.RootContainer
@@ -45,14 +50,4 @@ ReactDOM.render(
     route={new AppRoute()}
   />,
   document.getElementById('react')
-);
-
-console.log(
-  Relay.QL `query AllQuotes {
-    allQuotes {
-      id
-      text
-      author
-    }
-  }`
 );
