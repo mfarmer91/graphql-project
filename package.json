@@ -26,6 +26,7 @@
     "express": "^4.16.2",
     "express-graphql": "^0.6.11",
     "graphql": "^0.11.7",
+    "graphql-relay": "^0.4.2",
     "mongodb": "^2.2.33",
     "react": "^15.3.0",
     "react-dom": "^15.3.0",

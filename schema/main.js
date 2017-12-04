@@ -1,38 +1,56 @@
 const {
-    GraphQLSchema,
-    GraphQLObjectType,
-    GraphQLString,
-    GraphQLInt,
-    GraphQLList,
-    GraphQLBoolean,
-    GraphQLEnumType
+  GraphQLSchema,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLBoolean,
+  GraphQLEnumType
 } = require('graphql');
 
+const {
+  connectionDefinitions,
+  connectionArgs,
+  connectionFromArray,
+  connectionFromPromisedArray
+} = require('graphql-relay');
+
 const QuoteType = new GraphQLObjectType({
-    name: 'Quote',
-    fields: {
-        id: {
-            type: GraphQLString,
-            resolve: obj => obj._id
-        },
-        text: { type: GraphQLString },
-        author: { type: GraphQLString }
-    }
+  name: 'Quote',
+  fields: {
+    id: {
+      type: GraphQLString,
+      resolve: obj => obj._id
+    },
+    text: { type: GraphQLString },
+    author: { type: GraphQLString }
+  }
 });
 
-const quotesLibrary = {};
+const { connectionType: QuotesConnectionType } =
+  connectionDefinitions({
+    name: 'Quote',
+    nodeType: QuoteType
+  });
+
 
 const QuotesLibraryType = new GraphQLObjectType({
   name: 'QuotesLibrary',
   fields: {
-    allQuotes: {
-      type: new GraphQLList(QuoteType),
+    quotesConnection: {
+      type: QuotesConnectionType,
       description: 'A list of the quotes in the database',
-      resolve: (_, args, { db }) =>
-        db.collection('quotes').find().toArray()
+      args: connectionArgs,
+      resolve: (_, args, { db }) => connectionFromPromisedArray(
+        db.collection('quotes').find().toArray(),
+        args
+      )
     }
   }
 });
+//QuotesLibraryType is now connected to QuoteType through a connection, and individual -- or a high number of -- quotes can be paginated or returned.
+
+const quotesLibrary = {};
 
 const queryType = new GraphQLObjectType({
   name: 'RootQuery',
@@ -46,7 +64,7 @@ const queryType = new GraphQLObjectType({
 });
 
 const mySchema = new GraphQLSchema({
-    query: queryType
+  query: queryType
 });
 
 module.exports = mySchema;
