@@ -33,6 +33,8 @@ const { connectionType: QuotesConnectionType } =
     nodeType: QuoteType
   });
 
+let connectionArgsWithSearch = connectionArgs;
+connectionArgsWithSearch.searchTerm = { type: GraphQLString };
 
 const QuotesLibraryType = new GraphQLObjectType({
   name: 'QuotesLibrary',
@@ -40,11 +42,17 @@ const QuotesLibraryType = new GraphQLObjectType({
     quotesConnection: {
       type: QuotesConnectionType,
       description: 'A list of the quotes in the database',
-      args: connectionArgs,
-      resolve: (_, args, { db }) => connectionFromPromisedArray(
-        db.collection('quotes').find().toArray(),
-        args
-      )
+      args: connectionArgsWithSearch,
+      resolve: (_, args, { db }) => {
+        let findParams = {};
+        if (args.searchTerm) {
+          findParams.text = new RegExp(args.searchTerm, 'i');
+        }
+        return connectionFromPromisedArray(
+          db.collection('quotes').find(findParams).toArray(),
+          args
+        );
+      }
     }
   }
 });
