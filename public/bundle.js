@@ -24633,12 +24633,14 @@ QuotesLibrary = _reactRelay2.default.createContainer(QuotesLibrary, {
                   metadata: {
                     isRequisite: true
                   },
-                  type: 'String'
+                  type: 'ID'
                 }, _reactRelay2.default.QL.__frag(RQL_0)]),
                 fieldName: 'node',
                 kind: 'Field',
                 metadata: {
                   canHaveSubselections: true,
+                  inferredRootCallName: 'node',
+                  inferredPrimaryKey: 'id',
                   isRequisite: true
                 },
                 type: 'Quote'
@@ -24692,6 +24694,14 @@ QuotesLibrary = _reactRelay2.default.createContainer(QuotesLibrary, {
               isConnection: true
             },
             type: 'QuoteConnection'
+          }, {
+            fieldName: 'id',
+            kind: 'Field',
+            metadata: {
+              isGenerated: true,
+              isRequisite: true
+            },
+            type: 'ID'
           }],
           id: _reactRelay2.default.QL.__id(),
           kind: 'Fragment',
@@ -24723,7 +24733,15 @@ AppRoute.queries = {
   library: function library(Component) {
     return function (RQL_0) {
       return {
-        children: [].concat.apply([], [_reactRelay2.default.QL.__frag(RQL_0)]),
+        children: [].concat.apply([], [{
+          fieldName: 'id',
+          kind: 'Field',
+          metadata: {
+            isGenerated: true,
+            isRequisite: true
+          },
+          type: 'ID'
+        }, _reactRelay2.default.QL.__frag(RQL_0)]),
         fieldName: 'quotesLibrary',
         kind: 'Query',
         metadata: {},
@@ -62705,7 +62723,7 @@ exports.default = SearchForm;
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -62727,70 +62745,114 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var Quote = function (_React$Component) {
-  _inherits(Quote, _React$Component);
+    _inherits(Quote, _React$Component);
 
-  function Quote() {
-    _classCallCheck(this, Quote);
+    function Quote() {
+        var _ref;
 
-    return _possibleConstructorReturn(this, (Quote.__proto__ || Object.getPrototypeOf(Quote)).apply(this, arguments));
-  }
+        var _temp, _this, _ret;
 
-  _createClass(Quote, [{
-    key: 'render',
-    value: function render() {
-      return _react2.default.createElement(
-        'blockquote',
-        null,
-        _react2.default.createElement(
-          'p',
-          null,
-          this.props.quote.text
-        ),
-        _react2.default.createElement(
-          'footer',
-          null,
-          this.props.quote.author
-        )
-      );
+        _classCallCheck(this, Quote);
+
+        for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+            args[_key] = arguments[_key];
+        }
+
+        return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_ref = Quote.__proto__ || Object.getPrototypeOf(Quote)).call.apply(_ref, [this].concat(args))), _this), _this.showLikes = function () {
+            _this.props.relay.setVariables({ showLikes: true });
+        }, _temp), _possibleConstructorReturn(_this, _ret);
     }
-  }]);
 
-  return Quote;
+    _createClass(Quote, [{
+        key: 'displayLikes',
+        value: function displayLikes() {
+            if (!this.props.relay.variables.showLikes) {
+                return null;
+            }
+            return _react2.default.createElement(
+                'div',
+                null,
+                this.props.quote.likesCount,
+                ' \xA0',
+                _react2.default.createElement('span', { className: 'glyphicon glyphicon-thumbs-up' })
+            );
+        }
+    }, {
+        key: 'render',
+        value: function render() {
+            return _react2.default.createElement(
+                'blockquote',
+                { onClick: this.showLikes },
+                _react2.default.createElement(
+                    'p',
+                    null,
+                    this.props.quote.text
+                ),
+                _react2.default.createElement(
+                    'footer',
+                    null,
+                    this.props.quote.author
+                ),
+                this.displayLikes()
+            );
+        }
+    }]);
+
+    return Quote;
 }(_react2.default.Component);
 
 Quote = _reactRelay2.default.createContainer(Quote, {
-  fragments: {
-    quote: function quote() {
-      return function () {
-        return {
-          children: [{
-            fieldName: 'text',
-            kind: 'Field',
-            metadata: {},
-            type: 'String'
-          }, {
-            fieldName: 'author',
-            kind: 'Field',
-            metadata: {},
-            type: 'String'
-          }, {
-            fieldName: 'id',
-            kind: 'Field',
-            metadata: {
-              isGenerated: true,
-              isRequisite: true
-            },
-            type: 'String'
-          }],
-          id: _reactRelay2.default.QL.__id(),
-          kind: 'Fragment',
-          metadata: {},
-          name: 'OneQuote',
-          type: 'Quote'
-        };
-      }();
+    initialVariables: {
+        showLikes: false
+    },
+    fragments: {
+        quote: function quote() {
+            return function () {
+                return {
+                    children: [{
+                        fieldName: 'text',
+                        kind: 'Field',
+                        metadata: {},
+                        type: 'String'
+                    }, {
+                        fieldName: 'author',
+                        kind: 'Field',
+                        metadata: {},
+                        type: 'String'
+                    }, {
+                        directives: [{
+                            kind: 'Directive',
+                            name: 'include',
+                            args: [{
+                                name: 'if',
+                                value: {
+                                    kind: 'CallVariable',
+                                    callVariableName: 'showLikes'
+                                }
+                            }]
+                        }],
+                        fieldName: 'likesCount',
+                        kind: 'Field',
+                        metadata: {},
+                        type: 'Int'
+                    }, {
+                        fieldName: 'id',
+                        kind: 'Field',
+                        metadata: {
+                            isGenerated: true,
+                            isRequisite: true
+                        },
+                        type: 'ID'
+                    }],
+                    id: _reactRelay2.default.QL.__id(),
+                    kind: 'Fragment',
+                    metadata: {},
+                    name: 'OneQuote',
+                    type: 'Quote'
+                };
+            }();
+        }
     }
-  }
 });
 exports.default = Quote;
 
