@@ -9,6 +9,7 @@ const {
 } = require('graphql');
 
 const {
+    mutationWithClientMutationId,
     globalIdField,
     //function that creates a GraphQLID field that has an ID value that is globally unique across schema.
     fromGlobalId,
@@ -52,7 +53,8 @@ const QuoteType = new GraphQLObjectType({
         author: { type: GraphQLString },
         likesCount: {
             type: GraphQLInt,
-            resolve: () => Math.floor(10 * Math.random())
+            resolve: obj => obj.likesCount || 0
+            //obj is a database property, and this logic is how you read likesCount from the database.
         }
     }
 });
@@ -103,8 +105,45 @@ const queryType = new GraphQLObjectType({
     }
 });
 
+//MUTATION code below...
+
+const thumbsUpMutation = mutationWithClientMutationId({
+    name: 'ThumbsUpMutation',
+    inputFields: {
+        quoteId: { type: GraphQLString }
+    },
+    outputFields: {
+        quote: {
+            type: QuoteType,
+            resolve: obj => obj
+        }
+    },
+    mutateAndGetPayload: (params, { db }) => {
+        const { id } = fromGlobalId(params.quoteId);
+        return Promise.resolve(
+            db.collection('quotes').updateOne(
+                {_id: ObjectID(id) },
+                { $inc: { likesCount: 1 } }
+            )
+        ).then(result => db.collection('quotes').findOne(ObjectID(id))
+              );   
+        //this is a promise.
+    }
+});
+//mutateAndGetPayload takes an ID and increments likesCount by 1 in the database, and then outputs the result back to the database.
+//IMPORTANT TO NOTE: I used the updateOne() function + $inc operation to update likesCount.  Quote is then returned in a PROMISE.
+
+
+const mutationType = new GraphQLObjectType({
+    name: 'RootMutation',
+    fields: {
+        thumbsUp: thumbsUpMutation
+    }
+});
+
 const mySchema = new GraphQLSchema({
-  query: queryType
+    query: queryType,
+    mutation: mutationType
 });
 
 module.exports = mySchema;
