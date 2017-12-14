@@ -63012,6 +63012,11 @@ ThumbsUpMutation.fragments = {
             isRequisite: true
           },
           type: 'ID'
+        }, {
+          fieldName: 'likesCount',
+          kind: 'Field',
+          metadata: {},
+          type: 'Int'
         }],
         id: _reactRelay2.default.QL.__id(),
         kind: 'Fragment',

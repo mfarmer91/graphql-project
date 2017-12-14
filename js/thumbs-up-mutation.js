@@ -6,6 +6,7 @@ class ThumbsUpMutation extends Relay.Mutation {
     quote: () => Relay.QL `
       fragment on Quote {
         id
+        likesCount
       }
     `
   };
@@ -34,25 +35,25 @@ class ThumbsUpMutation extends Relay.Mutation {
     `;
   }
 
-    getConfigs() {
-        return [
-            {
-                type: 'FIELDS_CHANGE',
-                fieldIDs: {
-                    quote: this.props.quote.id
-                }
-            }
-        ];
-    }
+  getConfigs() {
+    return [
+      {
+        type: 'FIELDS_CHANGE',
+        fieldIDs: {
+          quote: this.props.quote.id
+        }
+      }
+    ];
+  }
 
-    getOptimisticResponse() {
-        return {
-            quote: {
-                id: this.props.quote.id,
-                likesCount: this.props.quote.likesCount + 1
-            }
-        };
-    }
+  getOptimisticResponse() {
+    return {
+      quote: {
+        id: this.props.quote.id,
+        likesCount: this.props.quote.likesCount + 1
+      }
+    };
+  }
 
 }
 
