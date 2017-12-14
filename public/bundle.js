@@ -62986,6 +62986,16 @@ var ThumbsUpMutation = function (_Relay$Mutation) {
         }
       }];
     }
+  }, {
+    key: 'getOptimisticResponse',
+    value: function getOptimisticResponse() {
+      return {
+        quote: {
+          id: this.props.quote.id,
+          likesCount: this.props.quote.likesCount + 1
+        }
+      };
+    }
   }]);
 
   return ThumbsUpMutation;
